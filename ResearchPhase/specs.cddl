@@ -1,0 +1,13 @@
+; All CDDL Below assumes the usage of existing cardano-ledger CDDL definitions
+; conway-era cardano-ledger CDDL can be found at the url below:
+; https://github.com/IntersectMBO/cardano-ledger/blob/master/eras/conway/impl/cddl-files/conway.cddl
+
+datum = 
+    constr#6.121<[
+        beacon_policy: bounded_bytes, ; All beacon tokens in the tx must be burnt upon redemption.
+        bond_name: bounded_bytes, ; Require the unique bond here is burnt upon redemption.
+        voting_power: big_int ; Require redeemer is equal to this upon unlocking.
+    ]>
+
+redeemer =
+    big_int ; Amount of voting power to mint or burn.
