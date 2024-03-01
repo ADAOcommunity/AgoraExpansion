@@ -1,0 +1,14 @@
+name = "adaocommunity/agora-expansion"
+version = "0.0.0"
+license = "Apache-2.0"
+description = "Aiken contracts for project 'adaocommunity/agora-expansion'"
+
+[repository]
+user = "adaocommunity"
+project = "agora-expansion"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "1.7.0"
+source = "github"
