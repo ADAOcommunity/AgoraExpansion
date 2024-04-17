@@ -1,4 +1,5 @@
 use aiken/bytearray
+use aiken/cbor
 use aiken/dict
 use aiken/hash.{Blake2b_224, Hash, blake2b_256}
 use aiken/list
@@ -16,6 +17,7 @@ use aiken/transaction/value.{AssetName, PolicyId, Value}
 /// This file contains a validator which can be used to lock NFT(s) as well as FT(s) as defined by the parameters.
 /// By locking these tokens, the user is able to mint governance tokens which are used to vote on proposals.
 /// At any time, the user may unlock their tokens and receive their original tokens back.
+/// None of the contract relies on stake credentials, so the user stake credential can be used if desirable.
 type ConfigParameter {
   action: ActionConfig,
   power_list: List<PowerConfig>,
@@ -43,8 +45,8 @@ type AssetSelection {
 }
 
 type TraitOption {
-  Included
-  Excluded
+  Included(ByteArray)
+  Excluded(ByteArray)
 }
 
 type ContractDatum {
@@ -57,80 +59,46 @@ type Redeemer {
   Unlock
 }
 
+// We only allow inline datums.
+fn get_inline_data(datum: Datum) -> Data {
+  when datum is {
+    InlineDatum(d) -> d
+    _ -> fail
+  }
+}
+
 // Generate the token name for the receipt.
-fn gen_token_name(
-  hash: ByteArray,
-  original_index: Int,
-  mint_index: Int,
-) -> AssetName {
-  blake2b_256(
-    bytearray.concat(
-      bytearray.concat(
-        hash,
-        string.to_bytearray(string.from_int(original_index)),
-      ),
-      string.to_bytearray(string.from_int(mint_index)),
-    ),
-  )
+fn gen_token_name(output_reference: OutputReference) -> AssetName {
+  blake2b_256(cbor.serialise(output_reference))
 }
 
 fn governance_token_name() -> AssetName {
   "voting_power"
 }
 
+// TODO
+// We still need to fill out a lot of the logic.
 fn get_power_for(
-  power_list: List<PowerConfig>,
-  asset: (ByteArray, ByteArray, Int),
+  power_config: PowerConfig,
+  value: Value,
+  reference_inputs: List<Input>,
 ) -> Int {
-  list.foldr(
-    power_list,
-    0,
-    fn(x: PowerConfig, y: Int) {
-      when x.asset_config is {
-        AssetSelection(a) ->
-          when a is {
-            PolicyId(policy) ->
-              when asset is {
-                (policy_id, _, multiplier) ->
-                  if policy == policy_id {
-                    y + x.weight * multiplier
-                  } else {
-                    y
-                  }
-              }
-            AssetClass(policy, name) ->
-              when asset is {
-                (policy_id, asset_name, multiplier) ->
-                  if policy == policy_id && name == asset_name {
-                    y + x.weight * multiplier
-                  } else {
-                    y
-                  }
-              }
-            _ -> y
-          }
-        _ -> y
+  when power_config.asset_config is {
+    AssetSelection(asset_selection) ->
+      when asset_selection is {
+        // For policy we use tokens and fold over the resulting Dict.ToList
+        // We get the value of each and add
+        PolicyId(policy) -> 1
+        // For asset class we simply look for the asset class amount and return it
+        AssetClass(policy, name) -> 2
+        // For filter, we must first look to tokens, 
+        // We really need to specify the input asset for effectiveness no?
+        FilterConfig(policy, filter) -> 3
       }
-    },
-  )
-  // let AssetConfig { weight, assetConfig } = x
-  // let (policy_id, asset_name, quantity) = asset
-  // let weight_for_asset =
-  // when assetConfig is {
-  // AssetSelection -> weight
-  // QuadraticConfig { policy, asset } ->
-  // let AssetSelection { policy: p, asset: a } = asset
-  // let FilterConfig { policy: p2, filter } = a
-  // let policy_matches = policy == p
-  // let asset_matches = asset_name == a
-  // let filter_matches =
-  // when filter is {
-  // Included -> True
-  // Excluded -> False
-  // }
-  // policy_matches && asset_matches && filter_matches
-  // }
-  // weight_for_asset * quantity
+    // Here we will get the tokens of the value for the policy. We fold over the fungible list which is a list of AssetClass, we should ensure this.
+    // Then we can basically just take the square root of the total of the fungible list, but only if the policy is satisfied.
+    QuadraticConfig(policy, fungible_list) -> 4
+  }
 }
 
 validator(config: ConfigParameter) {
@@ -146,13 +114,17 @@ validator(config: ConfigParameter) {
       extra_signatories,
       ..
     } = transaction
+
+    // Get the input that is being validated.
     expect [i] =
       list.filter(inputs, fn(input: Input) { input.output_reference == out })
+    // We know that the policy for voting power and receipts is the same as the payment credential because it's our script.
     let policy_id =
       when i.output.address.payment_credential is {
         ScriptCredential(policy_id) -> policy_id
         _ -> fail
       }
+    // We get the input again, and ensure that it's the only one coming from our script.
     expect [input] =
       list.filter(
         inputs,
@@ -160,12 +132,16 @@ validator(config: ConfigParameter) {
           input.output.address.payment_credential == i.output.address.payment_credential
         },
       )
+
+    // Here we should get the amount of tokens to burn from the datum and ensure that the burn is what we would expect it to be.
+    // TODO
     let tokens_burned =
       value.quantity_of(
         value.from_minted_value(mint),
         policy_id,
         governance_token_name(),
       ) < 0
+
     tokens_burned?
   }
 
@@ -184,11 +160,8 @@ validator(config: ConfigParameter) {
       Mint(policy_id) ->
         when redeemer is {
           Lock -> {
-            // We ensure that there is a single output to our locker.
-            // We ensure that there is are no inputs from our locker.
-            // We calculate the voting power based on the single output to our locker.
-            // We ensure that the voting power is minted properly.
-            // We ensure that the datum for our locker is correct.
+            // We ensure that there are no inputs from our locker.
+            expect Some(input_for_name) = list.at(inputs, 0)
             expect
               list.all(
                 inputs,
@@ -198,8 +171,7 @@ validator(config: ConfigParameter) {
                   )
                 },
               )
-            expect Some(first_input) = list.at(inputs, 0)
-            // find our single output.
+            // We ensure that there is a single output to our locker.
             expect [output] =
               list.filter(
                 outputs,
@@ -209,31 +181,42 @@ validator(config: ConfigParameter) {
                   )
                 },
               )
-            let a_list = value.flatten(output.value)
             // Calculate voting power
             let v_power =
               when config.action is {
                 Sum ->
                   list.foldr(
-                    a_list,
+                    config.power_list,
                     0,
-                    fn(x: (ByteArray, ByteArray, Int), y: Int) {
-                      get_power_for(config.power_list, x) + y
+                    fn(x: PowerConfig, y: Int) {
+                      get_power_for(x, output.value, reference_inputs) + y
                     },
                   )
                 Multiply ->
                   list.foldr(
-                    a_list,
-                    1,
-                    fn(x: (ByteArray, ByteArray, Int), y: Int) {
-                      get_power_for(config.power_list, x) * y
+                    config.power_list,
+                    0,
+                    fn(x: PowerConfig, y: Int) {
+                      get_power_for(x, output.value, reference_inputs) * y
                     },
                   )
               }
+
+            // We ensure that the datum for our locker is correct.
+            expect d: ContractDatum = get_inline_data(output.datum)
+            expect
+              d.bond_name == gen_token_name(input_for_name.output_reference)
+            expect d.voting_power == v_power
+            // Our output should have one of the two receipts as a beacon.
+            expect value.quantity_of(output.value, policy_id, d.bond_name) == 1
+
+            // We ensure that the voting power is minted properly.
             expect [(corrected_policy, corrected_token_map)] =
               value.from_asset(policy_id, governance_token_name(), v_power)
+                |> value.add(policy_id, d.bond_name, 2)
                 |> value.to_dict()
                 |> dict.to_list()
+
             let correct_mint = and {
                 corrected_policy == policy_id,
                 value.tokens(value.from_minted_value(mint), policy_id) == corrected_token_map,
@@ -241,6 +224,7 @@ validator(config: ConfigParameter) {
             correct_mint?
           }
           Unlock -> {
+            // TODO - We actually need to ensure that there are no positive mints of our policy in the mint at all here.
             let tokens_burned =
               value.quantity_of(
                 value.from_minted_value(mint),

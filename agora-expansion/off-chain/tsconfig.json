@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "target": "ESNext", // This is already ES2017 or higher, so it's fine
+      "module": "ESNext", // Adjusted to meet the criteria
+      "outDir": "./dist",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "moduleResolution": "node"
+    },
+    "include": ["src/**/*"]
+  }
+  
