@@ -88,51 +88,6 @@ export const testAll = async () => {
         console.log(await lucid.wallet.getUtxos())
 
         console.log("We successfully burned the governance tokens using our NFT using our smart contracts, allowing us to retrieve our locked tokens.")
-
-
-        // const initFee = await (await (await lucid.newTx()
-                        // .payToContract(lucid.utils.validatorToAddress(new StakeSplitterSplitLocker(pol)), {
-                                // inline: Data.to({FeeDatum: { feeAddr: {paymentCredential: {ScriptCredential: [feePkh]}, stakeCredential: {Inline: [{ScriptCredential: [feePkh]}]}},
-                                // feeAddr_2: {paymentCredential: {VerificationKeyCredential: [feePkh]}, stakeCredential: {Inline: [{VerificationKeyCredential: [feePkh]}]}}, feePermyriad: BigInt(500)}}, StakeSplitterSplitLocker.datum)
-                        // }, { ["lovelace"]: BigInt(2000000), [pol]: BigInt(1) })
-                        // .complete()).sign().complete()).submit();
-        // emulator.awaitBlock(5)
-        // console.log("initFee", initFee)
-        // const feeUtxo = await lucid.utxoByUnit(pol)
-        // console.log("feeUtxo", feeUtxo.datum)
-
-        // // Let's make some transactions with the emulator here for testing purposes.
-        // // First, let's split the stake.
-        // let splits: bigint[] = []
-        // for (let i = 0; i < 1; i++) {
-            // splits.push(BigInt(1000000000))
-        // }
-        // const split = await splitStake(pol, lucid, splits, emulator)
-        // console.log("split", split)
-        // emulator.awaitBlock(5)
-
-        // // const utxos = await lucid.wallet.getUtxos()
-        // // console.log("utxos", utxos)
-        // // const utxo = utxos.find((u) => { Object.keys(u.assets).length > 1})
-        // // console.log("utxo", utxo)
-        // // let receiptName = ""
-        // // for (let i = 0; i < Object.keys(utxo!.assets).length; i++) {
-            // // if (Object.keys(utxo!.assets)[i] !== "lovelace") {
-                // // receiptName = Object.keys(utxo!.assets)[i].slice(56)
-            // // }
-        // // }
-        // // console.log("receiptName", receiptName)
-
-        // // Now, let's move the stake.
-        // const move = await moveStake(pol, lucid, ["11bb4afc6a960eb40ac151a1349429c927a9f855aff1a25c4134559de8610608"], address2, emulator)
-        // console.log("move", move)
-        // emulator.awaitBlock(5)
-
-        // // Now, let's withdraw the stake.
-        // const utxo = await lucid.utxosByOutRef([{txHash: move, outputIndex: 0}])
-        // const withdraw = await withdrawStake(pol, lucid, utxo)
-        // console.log("withdraw", withdraw)
-        // emulator.awaitBlock(1)
     } catch (e) {
         console.log("error", e)
     }
