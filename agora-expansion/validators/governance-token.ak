@@ -19,11 +19,13 @@ use aiken/transaction/value
 /// None of the contract relies on stake credentials, so the user stake credential can be used if desirable.
 validator(config: ConfigParameter) {
   fn locker(datum: ContractDatum, _redeemer: Data, ctx: ScriptContext) {
+    trace @"step 1"
     let ScriptContext { transaction, purpose } = ctx
     expect Spend(out) = purpose
     let Transaction { inputs, mint, .. } = transaction
 
     // Get the input that is being validated.
+    trace @"step 2"
     expect [i] =
       list.filter(inputs, fn(input: Input) { input.output_reference == out })
     // We know that the policy for voting power and receipts is the same as the payment credential because it's our script.
@@ -33,6 +35,7 @@ validator(config: ConfigParameter) {
         _ -> fail
       }
     // We get the input again, and ensure that it's the only one coming from our script.
+    trace @"step 3"
     expect [_input] =
       list.filter(
         inputs,
@@ -42,6 +45,7 @@ validator(config: ConfigParameter) {
       )
 
     // Here we should get the amount of tokens to burn from the datum and ensure that the burn is what we would expect it to be.
+    trace @"step 4"
     let tokens_to_burn =
       dict.insert(dict.new(), datum.bond_name, -2, bytearray.compare)
         |> dict.insert(
@@ -51,6 +55,7 @@ validator(config: ConfigParameter) {
           )
     let tokens_burned =
       value.tokens(value.from_minted_value(mint), policy_id) == tokens_to_burn
+    trace @"step 5"
     tokens_burned?
   }
 
@@ -62,6 +67,7 @@ validator(config: ConfigParameter) {
         when redeemer is {
           Lock -> {
             // We ensure that there are no inputs from our locker.
+            trace @"step 1"
             expect Some(input_for_name) = list.at(inputs, 0)
             expect
               list.all(
@@ -73,6 +79,7 @@ validator(config: ConfigParameter) {
                 },
               )
             // We ensure that there is a single output to our locker.
+            trace @"step 2"
             expect [output] =
               list.filter(
                 outputs,
@@ -102,14 +109,19 @@ validator(config: ConfigParameter) {
                     },
                   )
               }
+            trace @"step 3"
 
             // We ensure that the datum for our locker is correct.
             expect d: ContractDatum = get_inline_data(output.datum)
+            trace @"step 4"
             expect
               d.bond_name == gen_token_name(input_for_name.output_reference)
+            trace @"step 5"
             expect d.voting_power == v_power
+            trace @"step 6"
             // Our output should have one of the two receipts as a beacon.
             expect value.quantity_of(output.value, policy_id, d.bond_name) == 1
+            trace @"step 7"
 
             // We ensure that the voting power is minted properly.
             expect [(corrected_policy, corrected_token_map)] =
@@ -117,11 +129,13 @@ validator(config: ConfigParameter) {
                 |> value.add(policy_id, d.bond_name, 2)
                 |> value.to_dict()
                 |> dict.to_list()
+            trace @"step 8"
 
             let correct_mint = and {
                 corrected_policy == policy_id,
                 value.tokens(value.from_minted_value(mint), policy_id) == corrected_token_map,
               }
+
             correct_mint?
           }
           Unlock -> {

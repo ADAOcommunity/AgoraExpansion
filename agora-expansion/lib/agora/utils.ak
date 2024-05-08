@@ -11,6 +11,8 @@ use aiken/transaction/value.{AssetName, Value, tokens}
 
 // We only allow inline datums.
 pub fn get_inline_data(datum: Datum) -> Data {
+  trace @"get_inline_datum"
+  trace cbor.diagnostic(datum)
   when datum is {
     InlineDatum(d) -> d
     _ -> fail
@@ -19,7 +21,9 @@ pub fn get_inline_data(datum: Datum) -> Data {
 
 // Generate the token name for the receipt.
 pub fn gen_token_name(output_reference: OutputReference) -> AssetName {
-  blake2b_256(cbor.serialise(output_reference))
+  let serialised = cbor.serialise(output_reference)
+  trace cbor.diagnostic(serialised)
+  blake2b_256(serialised)
 }
 
 pub fn governance_token_name() -> AssetName {

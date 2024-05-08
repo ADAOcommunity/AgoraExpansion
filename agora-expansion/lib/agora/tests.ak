@@ -1,8 +1,17 @@
 use agora/types.{
   AssetClass, AssetConfig, AssetSelection, PolicySelection, PowerConfig,
 }
-use agora/utils.{get_power_for}
+use agora/utils.{gen_token_name, get_power_for}
+use aiken/cbor.{diagnostic, serialise}
+use aiken/transaction.{OutputReference, TransactionId}
 use aiken/transaction/value.{Value, from_asset, merge}
+
+fn out_ref_1() -> OutputReference {
+  OutputReference {
+    transaction_id: TransactionId { hash: #"deadbeef" },
+    output_index: 0,
+  }
+}
 
 fn asset_config_1() -> AssetConfig {
   AssetSelection { asset_selection: PolicySelection { policy: #"deadbeef" } }
@@ -44,6 +53,13 @@ fn value_3() -> Value {
 
 test sanity_test() {
   1 == 1
+}
+
+test gen_token_name_1() {
+  let out_ref = out_ref_1()
+  let token_name = gen_token_name(out_ref)
+  trace diagnostic(serialise(out_ref))
+  token_name == #"9cdb17eaed2d62bb2f1932377512594fa41ba8c474ac7ca265610ec2ce2ad3a8"
 }
 
 test get_power_for_1() {
