@@ -1,55 +1,9 @@
 # agora-expansion
 
-Write validators in the `validators` folder, and supporting functions in the `lib` folder using `.ak` as a file extension.
-
-For example, as `validators/always_true.ak`
-
-```gleam
-validator {
-  fn spend(_datum: Data, _redeemer: Data, _context: Data) -> Bool {
-    True
-  }
-}
-```
+The Agora Expansion validators are meant to serve as a standalone set of validators (as opposed to a library) which provide functionality for users to create a fungible token which may be used as a governance token to participate in the usage of Agora (https://github.com/Liqwid-Labs/Agora) with novel structures of governance. NFTs, or multiple fungible tokens may be used together to calculate voting power based on the configuration used.
 
 ## Building
 
 ```sh
 aiken build
 ```
-
-## Testing
-
-You can write tests in any module using the `test` keyword. For example:
-
-```gleam
-test foo() {
-  1 + 1 == 2
-}
-```
-
-To run all tests, simply do:
-
-```sh
-aiken check
-```
-
-To run only tests matching the string `foo`, do:
-
-```sh
-aiken check -m foo
-```
-
-## Documentation
-
-If you're writing a library, you might want to generate an HTML documentation for it.
-
-Use:
-
-```sh
-aiken docs
-```
-
-## Resources
-
-Find more on the [Aiken's user manual](https://aiken-lang.org).
