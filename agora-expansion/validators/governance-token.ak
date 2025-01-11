@@ -139,8 +139,6 @@ validator(config: ConfigParameter) {
             correct_mint?
           }
           Unlock -> {
-            // TODO
-            // We actually need to ensure that there are no positive mints of our policy in the mint at all here.
             let tokens_burned =
               value.quantity_of(
                 value.from_minted_value(mint),
