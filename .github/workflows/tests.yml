@@ -15,6 +15,24 @@ jobs:
         with:
           version: v1.0.26-alpha
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: './agora-expansion/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./agora-expansion
+        run: npm install
+
+      - name: Build TypeScript
+        working-directory: ./agora-expansion
+        run: npm run build
+
+      - name: Run tests
+        working-directory: ./agora-expansion
+        run: npm test
+
       - run: aiken fmt --check
         working-directory: ./agora-expansion
       - run: aiken check -D
