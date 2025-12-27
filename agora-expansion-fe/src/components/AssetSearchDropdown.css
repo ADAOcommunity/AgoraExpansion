@@ -1,0 +1,144 @@
+.asset-search-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.dropdown-input:focus {
+  outline: none;
+  border-color: #9d71fd;
+  box-shadow: 0 0 0 3px rgba(157, 113, 253, 0.1);
+}
+
+.dropdown-input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 1.1rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.25rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: dropdownSlideIn 0.2s ease-out;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover,
+.dropdown-item.highlighted {
+  background: #f0f4ff;
+}
+
+.dropdown-item.no-results {
+  color: #999;
+  font-style: italic;
+  cursor: default;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.dropdown-item.no-results:hover {
+  background: white;
+}
+
+.dropdown-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dropdown-item-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.dropdown-item-details {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.dropdown-item-policy {
+  color: #666;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.dropdown-item-quantity {
+  color: #666;
+  margin-left: auto;
+}
+

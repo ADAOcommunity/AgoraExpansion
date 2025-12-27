@@ -4,15 +4,18 @@ import './TokenActions.css';
 interface TokenActionsProps {
   onGenerateClick: () => void;
   onRedeemClick: () => void;
+  onBack: () => void;
 }
 
 const TokenActions: React.FC<TokenActionsProps> = ({
   onGenerateClick,
   onRedeemClick,
+  onBack,
 }) => {
   return (
     <div className="token-actions-container">
       <div className="token-actions-card">
+        <button className="back-button" onClick={onBack}>← Back to Config</button>
         <h1 className="title">What would you like to do?</h1>
         <div className="actions">
           <div className="action-button generate" onClick={onGenerateClick}>

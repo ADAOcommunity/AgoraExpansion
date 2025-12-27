@@ -1,0 +1,379 @@
+.token-selection-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1f2e 0%, #2c3142 100%);
+  padding: 2rem;
+}
+
+.token-selection-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: #333;
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wallet-icon {
+  width: 32px;
+  height: 32px;
+  background: #000;
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.wallet-details {
+  font-size: 0.9rem;
+}
+
+.wallet-address {
+  color: #666;
+}
+
+.sign-out {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #eee;
+  background: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.sign-out:hover {
+  background: #f5f5f5;
+}
+
+h1 {
+  font-size: 1.75rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.error {
+  color: #dc3545;
+  padding: 1rem;
+  background: #fdf4f4;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+}
+
+.asset-selection-section {
+  margin-bottom: 2rem;
+}
+
+.asset-selection-section h2 {
+  margin-bottom: 1rem;
+}
+
+.dropdown-container {
+  margin-bottom: 1rem;
+}
+
+.all-assets-selected {
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.config-info {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: #f0f4ff;
+  border: 1px solid #9d71fd;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.no-matching-assets {
+  margin-top: 0.5rem;
+  color: #c53030;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  padding: 0.75rem;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 6px;
+}
+
+.selected-assets-section {
+  margin-bottom: 2rem;
+}
+
+.selected-assets-section h2 {
+  margin-bottom: 1rem;
+}
+
+.selected-assets-list {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.selected-assets-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.selected-assets-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.selected-assets-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.selected-assets-list::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+h2 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.asset-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.asset-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.asset-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.asset-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.asset-list::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+  font-style: italic;
+}
+
+.asset-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  gap: 1rem;
+}
+
+.asset-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.asset-item.selected {
+  background: #e8f4ff;
+  cursor: default;
+  flex-wrap: wrap;
+}
+
+.asset-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.asset-name {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
+.asset-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.asset-policy {
+  color: #666;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.asset-quantity {
+  color: #666;
+}
+
+.asset-select-icon {
+  font-size: 1.5rem;
+  color: #9d71fd;
+  font-weight: 300;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.asset-inputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  min-width: 150px;
+}
+
+.weight-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.weight-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.weight-value {
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.amount-input-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.amount-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.amount-input {
+  width: 100px;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-align: right;
+  transition: all 0.2s ease;
+}
+
+.amount-input:focus {
+  outline: none;
+  border-color: #9d71fd;
+  box-shadow: 0 0 0 2px rgba(157, 113, 253, 0.1);
+}
+
+.asset-remove {
+  background: #ff4444;
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.asset-remove:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.submit {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: #333;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit:hover {
+  background: #444;
+}
+
+.submit:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+} 

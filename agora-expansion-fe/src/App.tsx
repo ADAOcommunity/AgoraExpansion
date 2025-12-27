@@ -2,34 +2,60 @@ import React, { useState } from 'react';
 import './App.css';
 import WalletConnect from './components/WalletConnect';
 import TokenActions from './components/TokenActions';
-import GenerateTokensConfig from './components/GenerateTokensConfig';
-import RedeemTokensConfig from './components/RedeemTokensConfig';
+import TokenConfig from './components/TokenConfig';
+import TokenSelection from './components/TokenSelection';
+import NFTSelection from './components/NFTSelection';
 
-type Screen = 'connect' | 'actions' | 'generate' | 'redeem';
+type Screen = 'connect' | 'config' | 'actions' | 'select-tokens' | 'select-nft';
+
+interface TokenConfigData {
+  operation: 'sum' | 'multiply';
+  configs: Array<{ weight: string; assetConfig: string }>;
+}
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('connect');
   const [walletAddress, setWalletAddress] = useState<string>('');
+  const [walletName, setWalletName] = useState<string>('');
+  const [configData, setConfigData] = useState<TokenConfigData | null>(null);
+  const [selectedAction, setSelectedAction] = useState<'generate' | 'redeem' | null>(null);
 
-  const handleWalletConnect = () => {
-    setWalletAddress('addr1...99cg'); // This would come from actual wallet connection
-    setCurrentScreen('actions');
+  const handleWalletConnect = (walletAddress: string, walletName: string) => {
+    setWalletAddress(walletAddress);
+    setWalletName(walletName);
+    setCurrentScreen('config');
   };
 
   const handleSignOut = () => {
     setWalletAddress('');
+    setWalletName('');
+    setConfigData(null);
+    setSelectedAction(null);
     setCurrentScreen('connect');
   };
 
+  const handleConfigSubmit = (config: TokenConfigData) => {
+    setConfigData(config);
+    setCurrentScreen('actions');
+  };
+
   const handleGenerateClick = () => {
-    setCurrentScreen('generate');
+    setSelectedAction('generate');
+    setCurrentScreen('select-tokens');
   };
 
   const handleRedeemClick = () => {
-    setCurrentScreen('redeem');
+    setSelectedAction('redeem');
+    setCurrentScreen('select-nft');
   };
 
-  const handleBackToDashboard = () => {
+  const handleBackToConfig = () => {
+    setSelectedAction(null);
+    setCurrentScreen('config');
+  };
+
+  const handleBackToActions = () => {
+    setSelectedAction(null);
     setCurrentScreen('actions');
   };
 
@@ -38,27 +64,41 @@ function App() {
       {currentScreen === 'connect' && (
         <WalletConnect onConnect={handleWalletConnect} />
       )}
+
+      {currentScreen === 'config' && walletAddress && (
+        <TokenConfig
+          walletAddress={walletAddress}
+          walletName={walletName}
+          onSignOut={handleSignOut}
+          onSubmit={handleConfigSubmit}
+        />
+      )}
       
       {currentScreen === 'actions' && (
         <TokenActions 
           onGenerateClick={handleGenerateClick}
           onRedeemClick={handleRedeemClick}
-        />
-      )}
-      
-      {currentScreen === 'generate' && (
-        <GenerateTokensConfig
-          walletAddress={walletAddress}
-          onBack={handleBackToDashboard}
-          onSignOut={handleSignOut}
+          onBack={handleBackToConfig}
         />
       )}
 
-      {currentScreen === 'redeem' && (
-        <RedeemTokensConfig
+      {currentScreen === 'select-tokens' && walletAddress && (
+        <TokenSelection
           walletAddress={walletAddress}
-          onBack={handleBackToDashboard}
+          walletName={walletName}
           onSignOut={handleSignOut}
+          onBack={handleBackToActions}
+          configData={configData}
+        />
+      )}
+
+      {currentScreen === 'select-nft' && walletAddress && (
+        <NFTSelection
+          walletAddress={walletAddress}
+          walletName={walletName}
+          onSignOut={handleSignOut}
+          onBack={handleBackToActions}
+          configData={configData}
         />
       )}
     </div>
