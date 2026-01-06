@@ -1,9 +1,10 @@
 import { Assets } from 'lucid-cardano';
 import { Lucid } from 'lucid-cardano';
-import type { CardanoAPI } from '../types/window';
 import { lockTokens as lockTokensRaw, retrieveTokens as retrieveTokensRaw } from '../../../agora-expansion/src/index';
 
 export type AssetConfig = { policy: string, asset?: string, c: "P" | "A" }
+type WalletName = 'lace' | 'eternl' | 'nami' | 'yoroi';
+type CardanoWallet = NonNullable<Window['cardano']>[WalletName];
 
 export interface PowerListItem {
   weight: bigint;
@@ -32,16 +33,16 @@ export class CardanoService {
   private lucid: Lucid | null = null;
 
   private getAvailableWallet(
-    preferredWallets: Array<'lace' | 'eternl' | 'nami' | 'yoroi'>
-  ): { name: 'lace' | 'eternl' | 'nami' | 'yoroi'; api: CardanoAPI } {
+    preferredWallets: WalletName[]
+  ): { name: WalletName; wallet: CardanoWallet } {
     if (typeof window === 'undefined' || !window.cardano) {
       throw new Error('Cardano wallets not detected');
     }
 
     for (const name of preferredWallets) {
-      const api = window.cardano[name];
-      if (api) {
-        return { name, api };
+      const wallet = window.cardano[name];
+      if (wallet) {
+        return { name, wallet };
       }
     }
 
@@ -57,15 +58,15 @@ export class CardanoService {
     // this.lucid = await Lucid.new(...)
   }
 
-  async connectWallet(walletName?: 'lace' | 'eternl' | 'nami' | 'yoroi') {
+  async connectWallet(walletName?: WalletName) {
     if (!this.lucid) {
       throw new Error('Cardano service not initialized');
     }
 
-    const { api } = this.getAvailableWallet(
+    const { wallet } = this.getAvailableWallet(
       walletName ? [walletName] : ['lace', 'eternl', 'nami', 'yoroi']
     );
-    const enabledApi = await api.enable();
+    const enabledApi = await wallet.enable();
     this.lucid.selectWallet(enabledApi);
   }
 
