@@ -41,9 +41,6 @@ class LucidService {
   // Helper to convert hex address to bech32 format
   static async hexToBech32(hexAddress: string, network: Network = 'Mainnet'): Promise<string> {
     try {
-      // Initialize a temporary Lucid instance for address conversion
-      const tempLucid = await Lucid.new(undefined, network);
-      
       // Convert hex string to Uint8Array (browser-compatible)
       const hex = hexAddress.startsWith('0x') ? hexAddress.slice(2) : hexAddress;
       const addressBytes = new Uint8Array(
@@ -183,4 +180,3 @@ class LucidService {
 
 export const lucidService = new LucidService();
 export { LucidService };
-

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './TokenSelection.css';
 import { assetCache, Asset } from '../services/assetCache';
 import AssetSearchDropdown from './AssetSearchDropdown';
@@ -30,11 +30,7 @@ const TokenSelection: React.FC<TokenSelectionProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadWalletAssets();
-  }, [walletName]);
-
-  const loadWalletAssets = async () => {
+  const loadWalletAssets = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -82,7 +78,11 @@ const TokenSelection: React.FC<TokenSelectionProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [walletAddress]);
+
+  useEffect(() => {
+    loadWalletAssets();
+  }, [loadWalletAssets]);
 
   // Filter assets to only those that match the config
   const configMatchingAssets = React.useMemo(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Asset } from '../services/assetCache';
 import './AssetSearchDropdown.css';
 
@@ -56,6 +56,28 @@ const AssetSearchDropdown: React.FC<AssetSearchDropdownProps> = ({
     };
   }, []);
 
+  const handleInputFocus = () => {
+    setIsOpen(true);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setHighlightedIndex(-1);
+    if (!isOpen) {
+      setIsOpen(true);
+    }
+  };
+
+  const handleSelect = useCallback((asset: Asset) => {
+    onSelect(asset);
+    setSearchQuery('');
+    setIsOpen(false);
+    setHighlightedIndex(-1);
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
+  }, [onSelect]);
+
   // Handle keyboard navigation
   useEffect(() => {
     if (!isOpen) return;
@@ -83,29 +105,7 @@ const AssetSearchDropdown: React.FC<AssetSearchDropdownProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, filteredAssets, highlightedIndex]);
-
-  const handleInputFocus = () => {
-    setIsOpen(true);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setHighlightedIndex(-1);
-    if (!isOpen) {
-      setIsOpen(true);
-    }
-  };
-
-  const handleSelect = (asset: Asset) => {
-    onSelect(asset);
-    setSearchQuery('');
-    setIsOpen(false);
-    setHighlightedIndex(-1);
-    if (inputRef.current) {
-      inputRef.current.blur();
-    }
-  };
+  }, [isOpen, filteredAssets, highlightedIndex, handleSelect]);
 
   const formatQuantity = (asset: Asset): string => {
     if (asset.unit === 'lovelace') {
@@ -163,4 +163,3 @@ const AssetSearchDropdown: React.FC<AssetSearchDropdownProps> = ({
 };
 
 export default AssetSearchDropdown;
-

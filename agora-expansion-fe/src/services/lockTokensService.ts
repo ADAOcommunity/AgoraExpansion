@@ -1,7 +1,7 @@
 // Service file for lockTokens functionality
 // This file contains the lockTokens function and dependencies copied from agora-expansion
 // to avoid import path issues with webpack
-import { Assets, C, Constr, Data, fromHex, Lucid, toHex, UTxO } from 'lucid-cardano';
+import { Assets, C, Data, fromHex, Lucid, toHex, UTxO } from 'lucid-cardano';
 import pkg from 'blakejs';
 // Import plutus contracts from local src directory
 import { GovernanceTokenLocker, GovernanceTokenMinter } from '../plutus.js';
@@ -11,14 +11,6 @@ const { blake2bHex } = pkg;
 type AssetConfig = { policy: string, asset?: string, c: "P" | "A" }
 
 const votingPowerName = "766f74696e675f706f776572"
-
-// Receipt Name Functions
-const numberToHexString = (num: number): string => {
-    const str = num.toString();
-    const encoder = new TextEncoder();
-    const bytes = encoder.encode(str);
-    return Array.from(bytes, byte => byte.toString(16)).join('');
-}
 
 const getReceiptName = (serializedOut: string) => {
     const data = serializedOut
@@ -40,17 +32,17 @@ const subAssetsFromUtxos = (utxos: UTxO[], value: Assets): Assets => {
         let ks = Object.keys(assets)
         ks.forEach((k) => {
             let kVal = assets[k]
-            kVal = kVal != undefined ? kVal : BigInt(0);
+            kVal = kVal !== undefined ? kVal : BigInt(0);
             let uVal = utxoVal[k];
-            uVal = uVal != undefined ? uVal : BigInt(0);
+            uVal = uVal !== undefined ? uVal : BigInt(0);
             utxoVal[k] = BigInt(kVal.toString()) + BigInt(uVal.toString())
         });
     });
     valKs.forEach((k) => {
         let kVal = value[k]
-        kVal = kVal != undefined ? kVal : BigInt(0);
+        kVal = kVal !== undefined ? kVal : BigInt(0);
         let uVal = utxoVal[k]
-        uVal = uVal != undefined ? uVal : BigInt(0);
+        uVal = uVal !== undefined ? uVal : BigInt(0);
         utxoVal[k] = BigInt(uVal.toString()) - BigInt(kVal.toString())
     })
     return utxoVal;
@@ -162,7 +154,7 @@ const naiveCoinSelection = (availableUtxos: UTxO[], requiredAssets: Assets) => {
         return selectedUtxos;
     }
     
-    throw "Coin Selection Failed: Not enough ADA to cover minADA for change output."
+    throw new Error("Coin Selection Failed: Not enough ADA to cover minADA for change output.")
 }
 
 const getLocker = async (

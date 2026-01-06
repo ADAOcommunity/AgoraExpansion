@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './NFTSelection.css';
 import { lucidService, LucidService } from '../services/lucidService';
 import { getMinterPolicyId, retrieveTokens } from '../services/lockTokensService';
@@ -34,12 +34,8 @@ const NFTSelection: React.FC<NFTSelectionProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadReceiptNFTs();
-  }, [walletAddress, configData]);
-
   // Convert configData to powerList format (same as TokenSelection)
-  const buildPowerList = () => {
+  const buildPowerList = useCallback(() => {
     if (!configData || !configData.configs) return [];
     
     return configData.configs
@@ -77,9 +73,9 @@ const NFTSelection: React.FC<NFTSelectionProps> = ({
           }
         };
       });
-  };
+  }, [configData]);
 
-  const loadReceiptNFTs = async () => {
+  const loadReceiptNFTs = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -149,7 +145,11 @@ const NFTSelection: React.FC<NFTSelectionProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [walletAddress, configData, buildPowerList]);
+
+  useEffect(() => {
+    loadReceiptNFTs();
+  }, [loadReceiptNFTs]);
 
   const handleNFTSelect = (nft: ReceiptNFT) => {
     setSelectedNFT(nft);

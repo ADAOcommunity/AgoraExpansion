@@ -1,4 +1,4 @@
-interface UTxO {
+export interface UTxO {
   txHash: string;
   outputIndex: number;
   assets: { [unit: string]: string };
@@ -6,7 +6,7 @@ interface UTxO {
   datumHash?: string;
 }
 
-interface CardanoAPI {
+export interface CardanoAPI {
   enable: () => Promise<any>;
   getNetworkId: () => Promise<number>;
   getUtxos: (amount?: string, paginate?: { page: number; limit: number }) => Promise<UTxO[] | undefined>;
@@ -20,7 +20,7 @@ interface CardanoAPI {
   submitTx: (tx: string) => Promise<string>;
 }
 
-interface Cardano {
+export interface Cardano {
   eternl?: CardanoAPI;
   lace?: CardanoAPI;
   yoroi?: CardanoAPI;

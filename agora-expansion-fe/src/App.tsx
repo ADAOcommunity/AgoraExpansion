@@ -18,7 +18,6 @@ function App() {
   const [walletAddress, setWalletAddress] = useState<string>('');
   const [walletName, setWalletName] = useState<string>('');
   const [configData, setConfigData] = useState<TokenConfigData | null>(null);
-  const [selectedAction, setSelectedAction] = useState<'generate' | 'redeem' | null>(null);
 
   const handleWalletConnect = (walletAddress: string, walletName: string) => {
     setWalletAddress(walletAddress);
@@ -30,7 +29,6 @@ function App() {
     setWalletAddress('');
     setWalletName('');
     setConfigData(null);
-    setSelectedAction(null);
     setCurrentScreen('connect');
   };
 
@@ -40,22 +38,18 @@ function App() {
   };
 
   const handleGenerateClick = () => {
-    setSelectedAction('generate');
     setCurrentScreen('select-tokens');
   };
 
   const handleRedeemClick = () => {
-    setSelectedAction('redeem');
     setCurrentScreen('select-nft');
   };
 
   const handleBackToConfig = () => {
-    setSelectedAction(null);
     setCurrentScreen('config');
   };
 
   const handleBackToActions = () => {
-    setSelectedAction(null);
     setCurrentScreen('actions');
   };
 

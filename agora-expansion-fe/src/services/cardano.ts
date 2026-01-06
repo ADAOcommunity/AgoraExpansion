@@ -1,5 +1,6 @@
 import { Assets } from 'lucid-cardano';
 import { Lucid } from 'lucid-cardano';
+import type { CardanoAPI } from '../types/window';
 import { lockTokens as lockTokensRaw, retrieveTokens as retrieveTokensRaw } from '../../../agora-expansion/src/index';
 
 export type AssetConfig = { policy: string, asset?: string, c: "P" | "A" }
@@ -31,8 +32,8 @@ export class CardanoService {
   private lucid: Lucid | null = null;
 
   private getAvailableWallet(
-    preferredWallets: Array<keyof NonNullable<Window['cardano']>>
-  ): { name: keyof NonNullable<Window['cardano']>; api: NonNullable<Window['cardano']>[keyof NonNullable<Window['cardano']>] } {
+    preferredWallets: Array<'lace' | 'eternl' | 'nami' | 'yoroi'>
+  ): { name: 'lace' | 'eternl' | 'nami' | 'yoroi'; api: CardanoAPI } {
     if (typeof window === 'undefined' || !window.cardano) {
       throw new Error('Cardano wallets not detected');
     }

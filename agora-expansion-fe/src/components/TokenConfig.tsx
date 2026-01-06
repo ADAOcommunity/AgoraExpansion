@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './TokenConfig.css';
 import { assetCache, Asset } from '../services/assetCache';
 import AssetSearchDropdown from './AssetSearchDropdown';
@@ -34,11 +34,6 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
   const [loadingAssets, setLoadingAssets] = useState(true);
   const [assetLoadError, setAssetLoadError] = useState<string | null>(null);
 
-  // Load assets from wallet
-  useEffect(() => {
-    loadWalletAssets();
-  }, [walletName]);
-
   // Load config from URL if present
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -56,7 +51,7 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
     }
   }, []);
 
-  const loadWalletAssets = async () => {
+  const loadWalletAssets = useCallback(async () => {
     try {
       setLoadingAssets(true);
       setAssetLoadError(null);
@@ -107,7 +102,12 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
     } finally {
       setLoadingAssets(false);
     }
-  };
+  }, [walletAddress]);
+
+  // Load assets from wallet
+  useEffect(() => {
+    loadWalletAssets();
+  }, [loadWalletAssets]);
 
   const handleRemoveConfig = () => {
     if (powerConfigs.length > 1) {
