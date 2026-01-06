@@ -30,6 +30,23 @@ const retrieveTokens = retrieveTokensRaw as unknown as (
 export class CardanoService {
   private lucid: Lucid | null = null;
 
+  private getAvailableWallet(
+    preferredWallets: Array<keyof NonNullable<Window['cardano']>>
+  ): { name: keyof NonNullable<Window['cardano']>; api: NonNullable<Window['cardano']>[keyof NonNullable<Window['cardano']>] } {
+    if (typeof window === 'undefined' || !window.cardano) {
+      throw new Error('Cardano wallets not detected');
+    }
+
+    for (const name of preferredWallets) {
+      const api = window.cardano[name];
+      if (api) {
+        return { name, api };
+      }
+    }
+
+    throw new Error('No supported Cardano wallets found');
+  }
+
   async initialize() {
     if (typeof window.cardano === 'undefined') {
       throw new Error('Cardano wallet not found! Please install a wallet.');
@@ -39,13 +56,16 @@ export class CardanoService {
     // this.lucid = await Lucid.new(...)
   }
 
-  async connectWallet() {
+  async connectWallet(walletName?: 'lace' | 'eternl' | 'nami' | 'yoroi') {
     if (!this.lucid) {
       throw new Error('Cardano service not initialized');
     }
 
-    const api = await window.cardano.nami.enable();
-    this.lucid.selectWallet(api);
+    const { api } = this.getAvailableWallet(
+      walletName ? [walletName] : ['lace', 'eternl', 'nami', 'yoroi']
+    );
+    const enabledApi = await api.enable();
+    this.lucid.selectWallet(enabledApi);
   }
 
   async lockTokens(
