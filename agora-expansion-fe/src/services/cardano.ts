@@ -1,6 +1,6 @@
 import { Assets } from 'lucid-cardano';
-import { Lucid } from '../../../agora-expansion/node_modules/lucid-cardano';
-import { lockTokens, retrieveTokens } from '../../../agora-expansion/src/index';
+import { Lucid } from 'lucid-cardano';
+import { lockTokens as lockTokensRaw, retrieveTokens as retrieveTokensRaw } from '../../../agora-expansion/src/index';
 
 export type AssetConfig = { policy: string, asset?: string, c: "P" | "A" }
 
@@ -12,6 +12,20 @@ export interface PowerListItem {
     };
   };
 }
+
+const lockTokens = lockTokensRaw as unknown as (
+  lucid: Lucid,
+  assetsToLock: Assets,
+  action: "Sum" | "Multiply",
+  powerList: PowerListItem[]
+) => ReturnType<typeof lockTokensRaw>;
+
+const retrieveTokens = retrieveTokensRaw as unknown as (
+  lucid: Lucid,
+  receipt: string,
+  action: "Sum" | "Multiply",
+  powerList: PowerListItem[]
+) => ReturnType<typeof retrieveTokensRaw>;
 
 export class CardanoService {
   private lucid: Lucid | null = null;
