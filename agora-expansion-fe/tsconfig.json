@@ -11,6 +11,10 @@
       "noFallthroughCasesInSwitch": true,
       "module": "esnext",
       "moduleResolution": "node",
+      "baseUrl": "src",
+      "paths": {
+        "lucid-cardano": ["types/lucid-cardano"]
+      },
       "resolveJsonModule": true,
       "isolatedModules": true,
       "noEmit": true,
