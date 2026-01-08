@@ -14,6 +14,7 @@ declare module "lucid-cardano" {
   export type Lucid = any;
   export const Blockfrost: any;
   export const C: any;
+  export const Constr: any;
   export const Data: any;
   export const applyParamsToScript: (...args: any[]) => any;
   export const fromHex: (hex: string) => Uint8Array;
