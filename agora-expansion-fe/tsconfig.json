@@ -13,7 +13,8 @@
       "moduleResolution": "node",
       "baseUrl": "src",
       "paths": {
-        "lucid-cardano": ["types/lucid-cardano"]
+        "lucid-cardano": ["types/lucid-cardano"],
+        "blakejs": ["types/blakejs"]
       },
       "resolveJsonModule": true,
       "isolatedModules": true,
