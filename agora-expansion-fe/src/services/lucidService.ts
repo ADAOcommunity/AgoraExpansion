@@ -5,7 +5,7 @@ import { Asset } from './assetCache';
 // For mainnet: https://cardano-mainnet.blockfrost.io/api/v0
 // For testnet: https://cardano-testnet.blockfrost.io/api/v0
 const BLOCKFROST_MAINNET_URL = process.env.REACT_APP_BLOCKFROST_MAINNET_URL || 'https://cardano-mainnet.blockfrost.io/api/v0';
-const BLOCKFROST_MAINNET_API_KEY = process.env.REACT_APP_BLOCKFROST_MAINNET_API_KEY || 'mainnetrUAUmHUUTKXvyyWl6ksq8lRjX1iJod9D';
+const BLOCKFROST_MAINNET_API_KEY = process.env.REACT_APP_BLOCKFROST_MAINNET_API_KEY || 'mainnet1awJnGhrtbecFGCc7eWIf2VnB82r4ZOd';
 const BLOCKFROST_TESTNET_URL = process.env.REACT_APP_BLOCKFROST_TESTNET_URL || 'https://cardano-testnet.blockfrost.io/api/v0';
 const BLOCKFROST_TESTNET_API_KEY = process.env.REACT_APP_BLOCKFROST_TESTNET_API_KEY || '';
 

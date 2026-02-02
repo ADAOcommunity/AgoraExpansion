@@ -14,6 +14,7 @@ interface TokenConfigProps {
 interface PowerConfig {
   weight: string;
   assetConfig: string;
+  tokenType: 'FT' | 'NFT';
 }
 
 type OperationType = 'sum' | 'multiply';
@@ -26,9 +27,9 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
 }) => {
   const [operationType, setOperationType] = useState<OperationType>('sum');
   const [powerConfigs, setPowerConfigs] = useState<PowerConfig[]>([
-    { weight: '', assetConfig: '' },
-    { weight: '', assetConfig: '' },
-    { weight: '', assetConfig: '' },
+    { weight: '', assetConfig: '', tokenType: 'FT' },
+    { weight: '', assetConfig: '', tokenType: 'FT' },
+    { weight: '', assetConfig: '', tokenType: 'FT' },
   ]);
   const [allAssets, setAllAssets] = useState<Asset[]>([]);
   const [loadingAssets, setLoadingAssets] = useState(true);
@@ -116,7 +117,7 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
   };
 
   const handleAddConfig = () => {
-    setPowerConfigs([...powerConfigs, { weight: '', assetConfig: '' }]);
+    setPowerConfigs([...powerConfigs, { weight: '', assetConfig: '', tokenType: 'FT' }]);
   };
 
   const handleSubmit = () => {
@@ -173,8 +174,8 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
                   {assetLoadError ? (
                     <div className="asset-load-error">
                       <div className="error-text">{assetLoadError}</div>
-                      <button 
-                        className="retry-button" 
+                      <button
+                        className="retry-button"
                         onClick={loadWalletAssets}
                         type="button"
                       >
@@ -186,16 +187,18 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
                       <AssetSearchDropdown
                         assets={allAssets}
                         onSelect={(asset) => {
-                          // Format: policyId for policy-only, or policyId + assetName for named assets
                           let assetConfigValue = '';
                           if (asset.unit === 'lovelace') {
                             assetConfigValue = 'lovelace';
+                          } else if (config.tokenType === 'NFT') {
+                            // NFT: only pass the policy ID, not the asset name
+                            assetConfigValue = asset.policyId;
                           } else if (asset.assetName) {
                             assetConfigValue = `${asset.policyId}${asset.assetName}`;
                           } else {
                             assetConfigValue = asset.policyId;
                           }
-                          
+
                           const newConfigs = [...powerConfigs];
                           newConfigs[index].assetConfig = assetConfigValue;
                           setPowerConfigs(newConfigs);
@@ -210,6 +213,8 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
                               if (a.unit === 'lovelace' && config.assetConfig === 'lovelace') return true;
                               if (a.assetName && config.assetConfig === `${a.policyId}${a.assetName}`) return true;
                               if (!a.assetName && config.assetConfig === a.policyId) return true;
+                              // Also match when NFT mode stores just the policyId for a named asset
+                              if (config.tokenType === 'NFT' && a.policyId === config.assetConfig) return true;
                               return false;
                             });
                             return selectedAsset ? selectedAsset.displayName || selectedAsset.unit : config.assetConfig.slice(0, 20) + '...';
@@ -218,6 +223,26 @@ const TokenConfig: React.FC<TokenConfigProps> = ({
                       )}
                     </>
                   )}
+                </div>
+                <div
+                  className="token-type-toggle"
+                  onClick={() => {
+                    const newConfigs = [...powerConfigs];
+                    const newType = config.tokenType === 'FT' ? 'NFT' : 'FT';
+                    newConfigs[index].tokenType = newType;
+                    // Re-derive assetConfig if an asset is already selected
+                    if (config.assetConfig && config.assetConfig !== 'lovelace') {
+                      if (newType === 'NFT') {
+                        // Strip asset name, keep only policy
+                        newConfigs[index].assetConfig = config.assetConfig.slice(0, 56);
+                      }
+                      // When switching back to FT, user needs to re-select to get asset name back
+                    }
+                    setPowerConfigs(newConfigs);
+                  }}
+                >
+                  <span className={config.tokenType === 'FT' ? 'active' : ''}>FT</span>
+                  <span className={config.tokenType === 'NFT' ? 'active' : ''}>NFT</span>
                 </div>
                 {powerConfigs.length > 1 && index === powerConfigs.length - 1 && (
                   <button className="remove-config" onClick={handleRemoveConfig}>

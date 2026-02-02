@@ -98,9 +98,30 @@ h1 {
 
 .config-row {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr auto auto;
   gap: 1rem;
   align-items: center;
+}
+
+.token-type-toggle {
+  display: inline-flex;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+.token-type-toggle span {
+  padding: 0.5rem 0.75rem;
+  color: #999;
+  transition: all 0.2s ease;
+}
+
+.token-type-toggle span.active {
+  background: #333;
+  color: white;
 }
 
 .config-row input {

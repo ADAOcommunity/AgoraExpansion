@@ -10,7 +10,7 @@ type Screen = 'connect' | 'config' | 'actions' | 'select-tokens' | 'select-nft';
 
 interface TokenConfigData {
   operation: 'sum' | 'multiply';
-  configs: Array<{ weight: string; assetConfig: string }>;
+  configs: Array<{ weight: string; assetConfig: string; tokenType?: 'FT' | 'NFT' }>;
 }
 
 function App() {
