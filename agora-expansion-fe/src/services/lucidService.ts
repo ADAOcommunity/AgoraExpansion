@@ -1,12 +1,12 @@
 import { Lucid, Blockfrost, Network, C } from 'lucid-cardano';
 import { Asset } from './assetCache';
 
-// You'll need to set your Blockfrost API keys
+// Set Blockfrost API keys through .env / deployment secrets.
 // For mainnet: https://cardano-mainnet.blockfrost.io/api/v0
-// For testnet: https://cardano-testnet.blockfrost.io/api/v0
+// For preprod/testnet: https://cardano-preprod.blockfrost.io/api/v0
 const BLOCKFROST_MAINNET_URL = process.env.REACT_APP_BLOCKFROST_MAINNET_URL || 'https://cardano-mainnet.blockfrost.io/api/v0';
-const BLOCKFROST_MAINNET_API_KEY = process.env.REACT_APP_BLOCKFROST_MAINNET_API_KEY || 'mainnet1awJnGhrtbecFGCc7eWIf2VnB82r4ZOd';
-const BLOCKFROST_TESTNET_URL = process.env.REACT_APP_BLOCKFROST_TESTNET_URL || 'https://cardano-testnet.blockfrost.io/api/v0';
+const BLOCKFROST_MAINNET_API_KEY = process.env.REACT_APP_BLOCKFROST_MAINNET_API_KEY || '';
+const BLOCKFROST_TESTNET_URL = process.env.REACT_APP_BLOCKFROST_TESTNET_URL || 'https://cardano-preprod.blockfrost.io/api/v0';
 const BLOCKFROST_TESTNET_API_KEY = process.env.REACT_APP_BLOCKFROST_TESTNET_API_KEY || '';
 
 class LucidService {
@@ -28,8 +28,12 @@ class LucidService {
       blockfrostApiKey = BLOCKFROST_TESTNET_API_KEY;
     }
 
+    const apiKeyEnvName = network === 'Mainnet'
+      ? 'REACT_APP_BLOCKFROST_MAINNET_API_KEY'
+      : 'REACT_APP_BLOCKFROST_TESTNET_API_KEY';
+
     if (!blockfrostApiKey) {
-      throw new Error(`Blockfrost API key not configured for ${network}. Please set REACT_APP_BLOCKFROST_${network.toUpperCase()}_API_KEY environment variable.`);
+      throw new Error(`Blockfrost API key not configured for ${network}. Please set ${apiKeyEnvName} environment variable.`);
     }
 
     this.lucid = await Lucid.new(
