@@ -108,7 +108,7 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
               onClick={() => handleWalletClick('eternl')}
               disabled={connecting}
             >
-              <img src="/eternl.svg" alt="Eternl" />
+              <img src={`${process.env.PUBLIC_URL}/eternl.svg`} alt="Eternl" />
               <span>Eternl</span>
             </button>
             <button 
@@ -116,7 +116,7 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
               onClick={() => handleWalletClick('lace')}
               disabled={connecting}
             >
-              <img src="/lace.svg" alt="Lace" />
+              <img src={`${process.env.PUBLIC_URL}/lace.svg`} alt="Lace" />
               <span>Lace</span>
             </button>
             <button 
@@ -124,7 +124,7 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
               onClick={() => handleWalletClick('yoroi')}
               disabled={connecting}
             >
-              <img src="/yoroi.svg" alt="Yoroi" />
+              <img src={`${process.env.PUBLIC_URL}/yoroi.svg`} alt="Yoroi" />
               <span>Yoroi</span>
             </button>
           </div>
@@ -146,4 +146,4 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
   );
 };
 
-export default WalletConnect; 
+export default WalletConnect;
