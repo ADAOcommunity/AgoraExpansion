@@ -18,6 +18,12 @@ The public GUI is deployed at:
 
 This deployed interface is a static build of `agora-expansion-fe`. It requires Blockfrost configuration at build/deploy time so the app can read wallet assets and submit the normal lock/redeem flow.
 
+Supported CIP-30 wallets in the current frontend:
+
+- Eternl
+- Lace
+- Yoroi
+
 ## GUI local setup
 
 Requirements:
@@ -59,6 +65,10 @@ REACT_APP_BLOCKFROST_TESTNET_API_KEY=
 The `REACT_APP_` prefix is required because this frontend uses Create React App. Environment variables are read when `npm start` or `npm run build` starts. If the app shows `Blockfrost API key not configured`, add the matching `REACT_APP_BLOCKFROST_*_API_KEY` value and restart the dev server or rebuild the production bundle.
 
 Do not commit real Blockfrost API keys. Use repository or deployment secrets for hosted builds.
+
+Official Blockfrost development documentation:
+
+https://blockfrost.dev/
 
 ## GUI user flow
 
@@ -103,3 +113,26 @@ npm run test
 ```
 
 in the `agora-expansion` directory. This assumes that the user has npm installed locally.
+
+## Milestone 5 documentation
+
+GitBook-style milestone documentation lives in:
+
+- [Repository and frontend setup](./docs/milestone-5/repository-and-frontend-setup.md)
+- [Frontend Blockfrost setup](./docs/milestone-5/frontend-blockfrost-setup.md)
+- [UI walkthrough](./docs/milestone-5/ui-walkthrough.md)
+- [Launch materials](./docs/milestone-5/launch-materials.md)
+
+## Evidence to include in PoA
+
+For final proof-of-achievement, include:
+
+- Link to the public repository commit or release containing the UI and documentation.
+- Link to the deployed GUI: https://adaocommunity.github.io/AgoraExpansion/
+- Screenshots or video showing wallet connection, configuration, lock, and redeem flow.
+- Blockfrost setup notes so reviewers can reproduce wallet asset loading.
+- Live transaction links if non-mocked chain evidence is required.
+
+## Current closeout notes
+
+Wallet icon 404s and final visual polish can be handled as closeout UI work. They do not change the Blockfrost configuration requirement or the setup flow above.

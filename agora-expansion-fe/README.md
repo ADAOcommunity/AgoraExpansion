@@ -1,70 +1,112 @@
-# Getting Started with Create React App
+# AgoraExpansion Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React frontend for the AgoraExpansion governance flow.
 
-## Available Scripts
+Public deployment:
 
-In the project directory, you can run:
+https://adaocommunity.github.io/AgoraExpansion/
 
-### `npm start`
+## What The Frontend Does
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Connects a CIP-30 Cardano wallet.
+- Loads wallet assets through Lucid and Blockfrost.
+- Lets users configure NFT and FT voting-power rules.
+- Builds lock transactions that mint voting power and receipt NFTs.
+- Builds redeem transactions that use receipt NFTs to retrieve locked assets.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Supported wallets:
 
-### `npm test`
+- Eternl
+- Lace
+- Yoroi
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Install
 
-### `npm run build`
+```powershell
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Configure Blockfrost
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Copy the environment example:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```powershell
+Copy-Item .env.example .env
+```
 
-### `npm run eject`
+Fill in the project IDs for the networks you will use:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```text
+REACT_APP_BLOCKFROST_TESTNET_URL=https://cardano-preprod.blockfrost.io/api/v0
+REACT_APP_BLOCKFROST_TESTNET_API_KEY=your_preprod_or_preview_project_id
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+REACT_APP_BLOCKFROST_MAINNET_URL=https://cardano-mainnet.blockfrost.io/api/v0
+REACT_APP_BLOCKFROST_MAINNET_API_KEY=your_mainnet_project_id
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The app chooses the network from the connected wallet address:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `addr1...` uses `Mainnet`.
+- `addr_test1...` uses `Testnet`.
 
-## Learn More
+If the UI says a Blockfrost API key is not configured, set the matching `REACT_APP_BLOCKFROST_*_API_KEY` value and restart the app.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Do not commit real API keys, seed phrases, private keys, or wallet credentials.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Run Locally
 
-### Code Splitting
+```powershell
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Open:
 
-### Analyzing the Bundle Size
+```text
+http://localhost:3000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Build
 
-### Making a Progressive Web App
+```powershell
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The static output is written to:
 
-### Advanced Configuration
+```text
+build/
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Because this is a static browser app, `REACT_APP_*` values are embedded at build time. For GitHub Pages or another static host, provide the Blockfrost values during the production build.
 
-### Deployment
+## Test
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```powershell
+npm test
+```
 
-### `npm run build` fails to minify
+## Troubleshooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Wallet connects but assets do not load
+
+Check that:
+
+- `.env` is in `agora-expansion-fe/`.
+- The wallet network matches the Blockfrost URL.
+- The wallet has UTxOs on that network.
+- The React dev server was restarted after `.env` changes.
+
+### Blockfrost API key warning appears after wallet connection
+
+Set the missing key:
+
+```text
+REACT_APP_BLOCKFROST_TESTNET_API_KEY=...
+REACT_APP_BLOCKFROST_MAINNET_API_KEY=...
+```
+
+Then restart `npm start`.
+
+### Deployed app cannot read local `.env`
+
+Static deployments cannot read a local `.env` at runtime. Add the values to the deployment build environment or implement a runtime configuration layer before production promotion.
