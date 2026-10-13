@@ -41,6 +41,8 @@ test('shows configuration requirements and documentation before wallet connectio
 
   expect(screen.getByRole('heading', { name: 'Before connecting' })).toBeInTheDocument();
   expect(screen.getByText(/Wallet connection does not supply an API key/)).toBeInTheDocument();
+  expect(screen.getByText(/A wallet alone is not enough/)).toBeInTheDocument();
+  expect(screen.getByText(/This page does not provide test assets/)).toBeInTheDocument();
   expect(screen.getByText(/Do not use real funds/)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'Tutorial and screenshots' })).toHaveAttribute(
     'href',

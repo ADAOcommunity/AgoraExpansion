@@ -130,6 +130,13 @@ and open `http://localhost:3000`. Restart the server after changing `.env`.
 Switch the wallet to Preprod and use test ADA for fees plus eligible test FT/NFT
 assets. A connected wallet alone does not establish that the provider is configured.
 
+A Blockfrost key does not supply test ADA or mint eligible assets. Reviewers need
+NFTs or fungible tokens matching the configured policy IDs and asset names; they
+can configure rules around eligible assets in their own test wallet rather than
+using the original beta testers' NFTs. An empty wallet cannot reproduce the asset
+lock flow. Redeeming also requires the receipt and corresponding voting-power
+tokens from an earlier lock. The hosted interface does not distribute test assets.
+
 Follow the [UI walkthrough](./docs/milestone-5/ui-walkthrough.md): connect the
 wallet, configure asset rules and weights, generate voting power by locking the
 selected assets, then redeem the receipt to retrieve them. Compare the steps with
@@ -137,6 +144,10 @@ the public [screenshot tutorial](https://agora-expansion-tutorial.late-fog-e5ce.
 and [video walkthrough](https://agora-expansion-tutorial.late-fog-e5ce.workers.dev/walkthrough.html).
 Record transaction hashes and verify them on the same network when reviewing
 actual submissions; screenshots and video are separate demonstration evidence.
+The Playwright-generated tutorial walkthrough uses simulated wallet and
+transaction responses. It illustrates the interface, not a live Preprod
+submission; actual chain behavior should be supported by separate transaction
+records and explorer links.
 
 **Current testnet limitation:** the frontend currently maps `addr_test1...`
 addresses to the label `Testnet`, but the installed Lucid library expects

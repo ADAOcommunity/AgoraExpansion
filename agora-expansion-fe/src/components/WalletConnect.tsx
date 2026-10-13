@@ -119,6 +119,12 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
               project ID supplied when the app is built. Wallet connection does
               not supply an API key, and this page cannot accept your own key at runtime.
             </p>
+            <p>
+              A wallet alone is not enough: use Preprod test ADA and NFTs or
+              fungible tokens matching the configured voting rules. This page
+              does not provide test assets. Redeeming also requires a receipt
+              from an earlier lock.
+            </p>
             <p id="wallet-configuration-status" className="wallet-configuration-status" role="status">
               {hasBlockfrostConfiguration
                 ? `Keys supplied for: ${configuredProviders.join(', ')}. Match your wallet to the configured provider's network. Key validity and transaction readiness are not verified here.`

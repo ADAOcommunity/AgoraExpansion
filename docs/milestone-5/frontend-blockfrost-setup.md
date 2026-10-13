@@ -87,6 +87,28 @@ Install and unlock a supported CIP-30 browser wallet:
 
 The wallet must expose a `window.cardano.<walletName>` API and support wallet enablement, address reads, signing, and transaction submission.
 
+## Test Assets Required
+
+A wallet connection and Blockfrost project ID alone are not enough for a full
+transaction review. On Preprod, the wallet also needs:
+
+- Test ADA to cover transaction fees and minimum-ADA output requirements.
+- NFTs or fungible tokens matching the policy IDs and asset names in the voting
+  configuration, for the operation being tested.
+- A receipt from an earlier successful lock and the corresponding voting-power
+  tokens when testing redemption.
+
+The configuration screen selects assets from the connected wallet. Reviewers
+can configure eligible assets in their own test wallet; they do not necessarily
+need the original beta testers' NFTs. A wallet without eligible assets cannot
+reproduce the asset-lock path. Neither Blockfrost nor this hosted page supplies
+or mints test assets for the reviewer.
+
+The Playwright-generated tutorial uses simulated wallet and transaction
+responses. Use it to review the interface and expected steps, not as proof that
+a live Preprod transaction occurred. Keep actual transaction records and
+explorer links separate from tutorial media.
+
 ## Troubleshooting
 
 ### Blockfrost API key not configured
