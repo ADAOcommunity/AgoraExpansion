@@ -4,6 +4,30 @@ Repository to house new validators and off-chain code for leveraging Agora with 
 
 The repository contains a multi-validator in `agora-expansion/validators/governance-token.ak`. The multi-validator supports minting the token that represents voting power, and a locker that holds the NFTs and FTs used to generate that voting power. A user locks their tokens to mint an alternative token used for voting as described in the research in the `ResearchPhase` directory. In addition to the voting power token, a receipt is minted so the user's NFTs and FTs can be claimed when burning the correct amount of voting power.
 
+## Project links
+
+- Public GUI: https://adaocommunity.github.io/AgoraExpansion/
+- Developer documentation: https://agora-expansion-tutorial.late-fog-e5ce.workers.dev/
+- Step-by-step tutorial: https://agora-expansion-tutorial.late-fog-e5ce.workers.dev/tutorial
+- Video walkthrough: https://agora-expansion-tutorial.late-fog-e5ce.workers.dev/walkthrough.html
+- GitHub releases: https://github.com/ADAOcommunity/AgoraExpansion/releases
+
+## Stable release
+
+The `Publish v1.0.0 stable release` workflow checks the frontend tests and build,
+then creates the annotated `v1.0.0` tag and GitHub Release when the release
+preparation is merged into `main`. Publication runs only in
+`ADAOcommunity/AgoraExpansion`; pull requests run validation only.
+
+The workflow uses the repository's automatic `GITHUB_TOKEN`. No personal access
+token or Blockfrost key is required for release publication. An existing published
+release is left intact, and an existing tag is never moved. A failed publication
+can be retried by rerunning its workflow job.
+
+See [RELEASE_NOTES.md](./RELEASE_NOTES.md) for the release contents and configuration
+requirements. The versioned release identifies the source code; it does not certify
+a security audit or a hosted Mainnet service.
+
 ## Repository layout
 
 - `agora-expansion`: validators, off-chain transaction building code, and emulator tests.
