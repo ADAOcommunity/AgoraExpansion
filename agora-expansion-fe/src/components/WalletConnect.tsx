@@ -14,8 +14,14 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [errorWalletName, setErrorWalletName] = useState<string>('');
   const [connecting, setConnecting] = useState(false);
+  const configuredProviders = [
+    process.env.REACT_APP_BLOCKFROST_TESTNET_API_KEY?.trim() ? 'Testnet' : '',
+    process.env.REACT_APP_BLOCKFROST_MAINNET_API_KEY?.trim() ? 'Mainnet' : '',
+  ].filter(Boolean);
+  const hasBlockfrostConfiguration = configuredProviders.length > 0;
 
   const connectWallet = async (walletName: WalletName) => {
+    if (!hasBlockfrostConfiguration) return;
     setConnecting(true);
     
     try {
@@ -99,14 +105,47 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
           <div className="wallet-icon">
             {/* Wallet icon will be styled via CSS */}
           </div>
-          <h2 className="title">WEB3 GOVERNANCE TOKEN</h2>
-          <h1 className="subtitle">Connect your wallet to get started</h1>
+          <p className="title">Governance developer interface</p>
+          <h1 className="subtitle">Agora Expansion</h1>
+
+          <section className="wallet-review-notice" aria-labelledby="wallet-review-heading">
+            <h2 id="wallet-review-heading">Before connecting</h2>
+            <p>
+              This interface configures NFT and fungible-token voting-power rules
+              and supports the lock-and-redeem workflow.
+            </p>
+            <p>
+              Asset loading and transactions require a matching Blockfrost
+              project ID supplied when the app is built. Wallet connection does
+              not supply an API key, and this page cannot accept your own key at runtime.
+            </p>
+            <p id="wallet-configuration-status" className="wallet-configuration-status" role="status">
+              {hasBlockfrostConfiguration
+                ? `Keys supplied for: ${configuredProviders.join(', ')}. Match your wallet to the configured provider's network. Key validity and transaction readiness are not verified here.`
+                : 'Wallet connection is disabled: this build has no Blockfrost key. You can still open the tutorial and setup guide below.'}
+            </p>
+            <p>
+              For transaction review, run locally with your own Preprod
+              Blockfrost project and test assets. The setup guide lists the
+              current testnet limitation. Do not use real funds; this is not a
+              security-audited Mainnet service.
+            </p>
+            <nav className="wallet-review-links" aria-label="Demo documentation">
+              <a href="https://agora-expansion-tutorial.late-fog-e5ce.workers.dev/tutorial">
+                Tutorial and screenshots
+              </a>
+              <a href="https://github.com/ADAOcommunity/AgoraExpansion/blob/main/docs/milestone-5/frontend-blockfrost-setup.md">
+                Local setup guide
+              </a>
+            </nav>
+          </section>
           
           <div className="wallet-buttons">
             <button 
               className="wallet-button eternl" 
               onClick={() => handleWalletClick('eternl')}
-              disabled={connecting}
+              disabled={connecting || !hasBlockfrostConfiguration}
+              aria-describedby="wallet-configuration-status"
             >
               <img src={`${process.env.PUBLIC_URL}/eternl.svg`} alt="Eternl" />
               <span>Eternl</span>
@@ -114,7 +153,8 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
             <button 
               className="wallet-button lace" 
               onClick={() => handleWalletClick('lace')}
-              disabled={connecting}
+              disabled={connecting || !hasBlockfrostConfiguration}
+              aria-describedby="wallet-configuration-status"
             >
               <img src={`${process.env.PUBLIC_URL}/lace.svg`} alt="Lace" />
               <span>Lace</span>
@@ -122,7 +162,8 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onConnect }) => {
             <button 
               className="wallet-button yoroi" 
               onClick={() => handleWalletClick('yoroi')}
-              disabled={connecting}
+              disabled={connecting || !hasBlockfrostConfiguration}
+              aria-describedby="wallet-configuration-status"
             >
               <img src={`${process.env.PUBLIC_URL}/yoroi.svg`} alt="Yoroi" />
               <span>Yoroi</span>

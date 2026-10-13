@@ -1,6 +1,11 @@
 # Frontend Blockfrost Setup
 
-The frontend can connect a wallet without Blockfrost, but it cannot load wallet assets or proceed through the full configure, lock, and redeem flow until Blockfrost is configured.
+The wallet-connect screen explains the configuration requirements before
+requesting wallet access. If neither Blockfrost project ID is supplied at build
+time, the wallet buttons are disabled and the tutorial/setup links remain
+available. If a key is supplied, its provider is listed, but key validity and
+successful transactions are not implied. The wallet's network must match the
+provider configuration.
 
 ## Review Environment
 

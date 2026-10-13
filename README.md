@@ -42,6 +42,12 @@ The public GUI is deployed at:
 
 This deployed interface is a static build of `agora-expansion-fe`. It requires Blockfrost configuration at build/deploy time so the app can read wallet assets and submit the normal lock/redeem flow.
 
+Before wallet connection, the interface explains its scope, shows whether any
+Blockfrost project IDs were supplied at build time, and links to the tutorial
+and local setup guide. If neither provider key is supplied, wallet connection is
+disabled rather than leading to the missing-key error. A supplied key is not
+confirmation of provider availability or successful transactions.
+
 Supported CIP-30 wallets in the current frontend:
 
 - Eternl
