@@ -1,0 +1,73 @@
+name: Publish v1.0.0 stable release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/stable-release.yml
+      - .github/scripts/publish-stable-release*
+      - RELEASE_NOTES.md
+      - agora-expansion-fe/package.json
+      - agora-expansion-fe/package-lock.json
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/stable-release.yml
+      - .github/scripts/publish-stable-release*
+      - RELEASE_NOTES.md
+      - agora-expansion-fe/package.json
+      - agora-expansion-fe/package-lock.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: agora-expansion-fe/package-lock.json
+      - name: Test release publisher
+        run: node --test .github/scripts/publish-stable-release.test.cjs
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: agora-expansion-fe
+      - name: Test frontend
+        run: npm test -- --watchAll=false
+        working-directory: agora-expansion-fe
+      - name: Build frontend
+        run: npm run build
+        working-directory: agora-expansion-fe
+
+  publish:
+    needs: validate
+    if: >-
+      github.repository == 'ADAOcommunity/AgoraExpansion' &&
+      github.ref == 'refs/heads/main' &&
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    concurrency:
+      group: agora-expansion-v1.0.0
+      cancel-in-progress: false
+    steps:
+      - name: Checkout release commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Publish annotated tag and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/publish-stable-release.sh
+
